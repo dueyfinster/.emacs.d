@@ -1,5 +1,20 @@
 ;; Don't edit this file, edit /Users/ngrogan/.emacs.d/emacs-init.org instead ...
 
+
+;; Keep transient cruft out of ~/.emacs.d/
+(setq user-emacs-directory "~/.cache/emacs/"
+      backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory)))
+      url-history-file (expand-file-name "url/history" user-emacs-directory)
+      auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-emacs-directory)
+      projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-emacs-directory))
+
+;; Keep customization settings in a temporary file (thanks Ambrevar!)
+(setq custom-file
+      (if (boundp 'server-socket-dir)
+          (expand-file-name "custom.el" server-socket-dir)
+        (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+(load custom-file t)
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
