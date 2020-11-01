@@ -1,4 +1,4 @@
-;;; bootstrap.el
+;;; init.el
 ;;
 ;; Author: Adrien Brochard
 ;; URL:    https://github.com/abrochard/emacs-config
