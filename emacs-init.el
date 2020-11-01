@@ -1,6 +1,31 @@
 ;; Don't edit this file, edit /Users/ngrogan/.emacs.d/emacs-init.org instead ...
 
 
+  ;; Helper function for changing OS platform keywords to system-type strings
+  (defun platform-keyword-to-string (platform-keyword)
+    (cond
+     ((eq platform-keyword 'windows) "windows-nt")
+     ((eq platform-keyword 'cygwin) "cygwin")
+     ((eq platform-keyword 'osx) "darwin")
+     ((eq platform-keyword 'linux) "gnu/linux")))
+
+  ;; Define a macro that runs an elisp expression only on a particular platform
+  (defmacro on-platform-do (&rest platform-expressions)
+    `(cond
+      ,@(mapcar
+         (lambda (platform-expr)
+       (let ((keyword (nth 0 platform-expr))
+             (expr (nth 1 platform-expr)))
+         `(,(if (listp keyword)
+           `(or
+             ,@(mapcar
+                (lambda (kw) `(string-equal system-type ,(platform-keyword-to-string kw)))
+                keyword))
+            `(string-equal system-type ,(platform-keyword-to-string keyword)))
+            ,expr)))
+         platform-expressions)))
+
+
 ;; Keep transient cruft out of ~/.emacs.d/
 (setq user-emacs-directory "~/.cache/emacs/"
       backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory)))
@@ -31,7 +56,7 @@
 ;;  ;; To disable collection of benchmark data after init is done.
 ;;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 (server-start)
-(when (memq window-system '(mac ns))
+(on-platform-do (mac
   (setq ns-pop-up-frames nil
         x-select-enable-clIpboard t)
 (use-package exec-path-from-shell
@@ -39,7 +64,7 @@
   :ensure t
   :config (exec-path-from-shell-initialize))
   (when (fboundp 'mac-auto-operator-composition-mode)
-    (mac-auto-operator-composition-mode 1)))'
+    (mac-auto-operator-composition-mode 1))))'
   (setq tls-checktrust t)
   (setq gnutls-verify-error t)
 (mapc
@@ -59,7 +84,58 @@
        calendar-latitude 53.42
        calendar-longitude -7.94
        calendar-location-name "Athlone, Ireland")
-(use-package solarized-theme :config (load-theme 'solarized-dark t))
+
+  ;; Thanks, but no thanks
+  (setq inhibit-startup-message t)
+  (scroll-bar-mode -1)        ; Disable visible scrollbar
+  (tool-bar-mode -1)          ; Disable the toolbar
+  (tooltip-mode -1)           ; Disable tooltips
+  (set-fringe-mode 10)        ; Give some breathing room
+
+  (menu-bar-mode -1)            ; Disable the menu bar
+
+  ;; Set up the visible bell
+  (setq visible-bell t)
+
+  ;; Emacs Lisp as starting mode
+  (setq initial-major-mode 'emacs-lisp-mode)
+  
+  ;; Empty Scratch Buffer
+  (setq initial-scratch-message nil)
+
+  ;; Don't warn following Symlinks
+  (setq vc-follow-symlinks t)
+
+  ;; Don't warn for large files (like videos)
+  (setq large-file-warning-threshold nil)
+  (use-package spacegray-theme :defer t)
+  (use-package doom-themes :defer t)
+  (use-package solarized-theme :config (load-theme 'solarized-dark t))
+
+  ;; Set the font face based on platform
+  (on-platform-do
+   ((windows cygwin) (set-face-attribute 'default nil :font "Fira Mono:antialias=subpixel" :height 130))
+    (osx (set-face-attribute 'default nil :font "Fira Mono" :height 170))
+    (linux (set-face-attribute 'default nil :font "Fira Code Retina" :height 220)))
+
+  ;; Set the fixed pitch face
+  (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 200)
+
+  ;; Set the variable pitch face
+  ;;(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 245 :weight 'regular)
+
+
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  erc-mode-hook
+                  term-mode-hook
+                  eshell-mode-hook
+                  vterm-mode-hook
+                  neotree-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
   (defun edit-config-file ()
     (interactive)
     (find-file (concat config-load-path "emacs-init.org")))
@@ -108,12 +184,6 @@
      "^/\\(?:ssh\\|su\\|sudo\\)?:" ;; ignore tramp/ssh files
      ))
 (setq-default recent-save-file "~/.emacs.d/recentf"))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(setq inhibit-startup-message t)
-(setq initial-major-mode 'emacs-lisp-mode)
-(setq initial-scratch-message nil)
 (use-package pdf-tools
   ;  :if (not (string-equal system-type "windows-nt"))
   :mode (("\\.pdf\\'" . pdf-view-mode))

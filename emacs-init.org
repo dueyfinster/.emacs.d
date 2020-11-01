@@ -2,6 +2,41 @@
 #+AUTHOR: Neil Grogan
 #+BABEL: :cache yes
 
+* Helper Functions
+
+** Platform Helpers
+
+Here are a couple helpful functions for doing things based on what platform
+Emacs is running on.
+
+#+begin_src emacs-lisp
+
+  ;; Helper function for changing OS platform keywords to system-type strings
+  (defun platform-keyword-to-string (platform-keyword)
+    (cond
+     ((eq platform-keyword 'windows) "windows-nt")
+     ((eq platform-keyword 'cygwin) "cygwin")
+     ((eq platform-keyword 'osx) "darwin")
+     ((eq platform-keyword 'linux) "gnu/linux")))
+
+  ;; Define a macro that runs an elisp expression only on a particular platform
+  (defmacro on-platform-do (&rest platform-expressions)
+    `(cond
+      ,@(mapcar
+         (lambda (platform-expr)
+       (let ((keyword (nth 0 platform-expr))
+             (expr (nth 1 platform-expr)))
+         `(,(if (listp keyword)
+           `(or
+             ,@(mapcar
+                (lambda (kw) `(string-equal system-type ,(platform-keyword-to-string kw)))
+                keyword))
+            `(string-equal system-type ,(platform-keyword-to-string keyword)))
+            ,expr)))
+         platform-expressions)))
+
+#+end_src
+
 
 * Keep .emacs.d Clean
 
@@ -48,7 +83,7 @@ I don't want a bunch of transient files showing up as untracked in the Git repo 
 
 ** Mac OS
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
-(when (memq window-system '(mac ns))
+(on-platform-do (mac
   (setq ns-pop-up-frames nil
         x-select-enable-clIpboard t)
 (use-package exec-path-from-shell
@@ -56,7 +91,7 @@ I don't want a bunch of transient files showing up as untracked in the Git repo 
   :ensure t
   :config (exec-path-from-shell-initialize))
   (when (fboundp 'mac-auto-operator-composition-mode)
-    (mac-auto-operator-composition-mode 1)))'
+    (mac-auto-operator-composition-mode 1))))'
 #+END_SRC
 ** Security
    Inspired by [[https://ogbe.net/emacsconfig.html][ogbe.net]] and [[https://glyph.twistedmatrix.com/2015/11/editor-malware.html][Your Text Editor Is Malware]].
@@ -99,10 +134,87 @@ And force the install of missing packages.
        calendar-location-name "Athlone, Ireland")
  #+END_SRC
 
-* Theme
- #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
-(use-package solarized-theme :config (load-theme 'solarized-dark t))
+* General Configuration
+
+** User Interface
+
+Clean up Emacs' user interface, make it more minimal.
+
+#+begin_src emacs-lisp
+
+  ;; Thanks, but no thanks
+  (setq inhibit-startup-message t)
+  (scroll-bar-mode -1)        ; Disable visible scrollbar
+  (tool-bar-mode -1)          ; Disable the toolbar
+  (tooltip-mode -1)           ; Disable tooltips
+  (set-fringe-mode 10)        ; Give some breathing room
+
+  (menu-bar-mode -1)            ; Disable the menu bar
+
+  ;; Set up the visible bell
+  (setq visible-bell t)
+
+  ;; Emacs Lisp as starting mode
+  (setq initial-major-mode 'emacs-lisp-mode)
+  
+  ;; Empty Scratch Buffer
+  (setq initial-scratch-message nil)
+
+  ;; Don't warn following Symlinks
+  (setq vc-follow-symlinks t)
+
+  ;; Don't warn for large files (like videos)
+  (setq large-file-warning-threshold nil)
 #+END_SRC
+
+
+** Theme
+ #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code
+  (use-package spacegray-theme :defer t)
+  (use-package doom-themes :defer t)
+  (use-package solarized-theme :config (load-theme 'solarized-dark t))
+#+END_SRC
+
+** Font
+
+*** Set the font
+
+Different platforms need different default font sizes, and
+[[https://mozilla.github.io/Fira/][Fira Mono]] is currently my favorite face.
+
+#+begin_src emacs-lisp
+
+  ;; Set the font face based on platform
+  (on-platform-do
+   ((windows cygwin) (set-face-attribute 'default nil :font "Fira Mono:antialias=subpixel" :height 130))
+    (osx (set-face-attribute 'default nil :font "Fira Mono" :height 170))
+    (linux (set-face-attribute 'default nil :font "Fira Code Retina" :height 220)))
+
+  ;; Set the fixed pitch face
+  (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 200)
+
+  ;; Set the variable pitch face
+  ;;(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 245 :weight 'regular)
+
+#+end_src
+
+** Line Numbers
+Enable line numbers and customize their format.
+
+#+begin_src emacs-lisp
+
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  erc-mode-hook
+                  term-mode-hook
+                  eshell-mode-hook
+                  vterm-mode-hook
+                  neotree-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+#+end_src
 
 * Quickly edit this config file
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
@@ -176,22 +288,6 @@ but is not a high priority.
      "^/\\(?:ssh\\|su\\|sudo\\)?:" ;; ignore tramp/ssh files
      ))
 (setq-default recent-save-file "~/.emacs.d/recentf"))
-#+END_SRC
-** Disable GUI Elements
-#+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-#+END_SRC
-** Disable splash screen
-And set it in emacs-lisp mode
-#+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
-(setq inhibit-startup-message t)
-(setq initial-major-mode 'emacs-lisp-mode)
-#+END_SRC
-** Empty Scratch buffer
-#+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
-(setq initial-scratch-message nil)
 #+END_SRC
 
 * PDF Tools
