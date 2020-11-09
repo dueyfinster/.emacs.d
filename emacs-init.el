@@ -153,6 +153,8 @@
       version-control t)
 
 (setq create-lockfiles nil)
+(auto-save-visited-mode t)
+(auto-revert-mode t)
 ;; Load desktop buffers lazily.
   (setq desktop-lazy-idle-delay 2)
   (setq desktop-lazy-verbose nil)
@@ -378,9 +380,34 @@
   ;; Org-Protocol entries
 	("p" "Protocol" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
         "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-	("L" "Protocol Link" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
+	("L" "Protocol Link" entry (file+function ,(concat org-directory "inbox.org") find-date-tree)
         "* %? [[%:link][%:description]] \nCaptured On: %U")
 ))
+
+(defun get-year-and-month ()
+  (list (format-time-string "%Y") (format-time-string "%B")))
+
+(defun find-date-tree ()
+  (let* ((path (get-year-and-month))
+         (level 1)
+         end)
+    (unless (derived-mode-p 'org-mode)
+      (error "Target buffer \"%s\" should be in Org mode" (current-buffer)))
+    (goto-char (point-min))
+    (dolist (heading path)
+      (let ((re (format org-complex-heading-regexp-format
+                        (regexp-quote heading)))
+            )
+        (if (re-search-forward re end t)
+            (goto-char (point-at-bol)) 
+          (progn
+            (or (bolp) (insert "\n"))
+            (if (/= (point) (point-min)) (org-end-of-subtree t t))
+            (insert (make-string level ?*) " " heading "\n"))))
+      (setq level (1+ level))
+      (setq end (save-excursion (org-end-of-subtree t t))))
+    (org-end-of-subtree)))
+
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "DELEGATED(e@/!)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
@@ -446,8 +473,7 @@
   :ensure t
   :diminish yas-minor-mode
   :config (setq yas-snippet-dirs
-           '("~/.dotfiles/conf/emacs.d/snippets"   ;; git synced snippets
-             "~/.emacs.d/snippets"                 ;; local snippets
+           '("~/.emacs.d/snippets"                 ;; local snippets
            ))
           (yas-global-mode 1))
 (use-package which-key
