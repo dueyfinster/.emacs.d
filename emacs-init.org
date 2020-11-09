@@ -475,8 +475,7 @@ Git Gutter
 
 ** Org Agenda
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
-(setq org-agenda-files (cons org-inbox-path
-                          (cons org-gtd-path org-tickler-path)))
+(setq org-agenda-files `(,org-inbox-path ,org-gtd-path ,org-tickler-path))
 (setq org-refile-targets '((org-gtd-path :maxlevel . 1)
                            (org-tickler-path :level . 2)
                            (org-someday-path :maxlevel . 2)))

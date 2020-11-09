@@ -322,8 +322,7 @@
 (setq org-gtd-path (concat org-directory "gtd.org"))
 (setq org-tickler-path (concat org-directory "tickler.org"))
 (setq org-someday-path (concat org-directory "someday.org"))
-(setq org-agenda-files (cons org-inbox-path
-                          (cons org-gtd-path org-tickler-path)))
+(setq org-agenda-files `(,org-inbox-path ,org-gtd-path ,org-tickler-path))
 (setq org-refile-targets '((org-gtd-path :maxlevel . 1)
                            (org-tickler-path :level . 2)
                            (org-someday-path :maxlevel . 2)))
