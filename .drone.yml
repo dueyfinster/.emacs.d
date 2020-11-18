@@ -1,0 +1,10 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: silex/emacs:27.1-alpine-dev
+  commands:
+  - emacs -Q --batch -L . --eval "(setq byte-compile-error-on-warn t)" -f batch-byte-compile init.el
