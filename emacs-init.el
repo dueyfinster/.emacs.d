@@ -1,4 +1,4 @@
-;; Don't edit this file, edit /Users/ngrogan/.emacs.d/emacs-init.org instead ...
+;; Don't edit this file, edit c:/Users/egronei/.emacs.d/emacs-init.org instead ...
 
 
   ;; Helper function for changing OS platform keywords to system-type strings
@@ -92,7 +92,7 @@
   (tooltip-mode -1)           ; Disable tooltips
   (set-fringe-mode 10)        ; Give some breathing room
 
-  (menu-bar-mode -1)            ; Disable the menu bar
+  ;;(menu-bar-mode -1)            ; Disable the menu bar
 
   ;; Set up the visible bell
   (setq visible-bell t)
