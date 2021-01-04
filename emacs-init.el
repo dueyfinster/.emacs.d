@@ -1,44 +1,4 @@
-;; Don't edit this file, edit c:/Users/egronei/.emacs.d/emacs-init.org instead ...
-
-
-  ;; Helper function for changing OS platform keywords to system-type strings
-  (defun platform-keyword-to-string (platform-keyword)
-    (cond
-     ((eq platform-keyword 'windows) "windows-nt")
-     ((eq platform-keyword 'cygwin) "cygwin")
-     ((eq platform-keyword 'osx) "darwin")
-     ((eq platform-keyword 'linux) "gnu/linux")))
-
-  ;; Define a macro that runs an elisp expression only on a particular platform
-  (defmacro on-platform-do (&rest platform-expressions)
-    `(cond
-      ,@(mapcar
-         (lambda (platform-expr)
-       (let ((keyword (nth 0 platform-expr))
-             (expr (nth 1 platform-expr)))
-         `(,(if (listp keyword)
-           `(or
-             ,@(mapcar
-                (lambda (kw) `(string-equal system-type ,(platform-keyword-to-string kw)))
-                keyword))
-            `(string-equal system-type ,(platform-keyword-to-string keyword)))
-            ,expr)))
-         platform-expressions)))
-
-
-;; Keep transient cruft out of ~/.emacs.d/
-(setq user-emacs-directory "~/.cache/emacs/"
-      backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory)))
-      url-history-file (expand-file-name "url/history" user-emacs-directory)
-      auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-emacs-directory)
-      projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-emacs-directory))
-
-;; Keep customization settings in a temporary file (thanks Ambrevar!)
-(setq custom-file
-      (if (boundp 'server-socket-dir)
-          (expand-file-name "custom.el" server-socket-dir)
-        (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
-(load custom-file t)
+;; Don't edit this file, edit c:/Users/egronei/.dotfiles/conf/emacs.d/emacs-init.org instead ...
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -56,7 +16,7 @@
 ;;  ;; To disable collection of benchmark data after init is done.
 ;;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 (server-start)
-(on-platform-do (mac
+(when (memq window-system '(mac ns))
   (setq ns-pop-up-frames nil
         x-select-enable-clIpboard t)
 (use-package exec-path-from-shell
@@ -64,7 +24,7 @@
   :ensure t
   :config (exec-path-from-shell-initialize))
   (when (fboundp 'mac-auto-operator-composition-mode)
-    (mac-auto-operator-composition-mode 1))))'
+    (mac-auto-operator-composition-mode 1)))'
   (setq tls-checktrust t)
   (setq gnutls-verify-error t)
 (mapc
@@ -84,58 +44,7 @@
        calendar-latitude 53.42
        calendar-longitude -7.94
        calendar-location-name "Athlone, Ireland")
-
-  ;; Thanks, but no thanks
-  (setq inhibit-startup-message t)
-  (scroll-bar-mode -1)        ; Disable visible scrollbar
-  (tool-bar-mode -1)          ; Disable the toolbar
-  (tooltip-mode -1)           ; Disable tooltips
-  (set-fringe-mode 10)        ; Give some breathing room
-
-  ;;(menu-bar-mode -1)            ; Disable the menu bar
-
-  ;; Set up the visible bell
-  (setq visible-bell t)
-
-  ;; Emacs Lisp as starting mode
-  (setq initial-major-mode 'emacs-lisp-mode)
-  
-  ;; Empty Scratch Buffer
-  (setq initial-scratch-message nil)
-
-  ;; Don't warn following Symlinks
-  (setq vc-follow-symlinks t)
-
-  ;; Don't warn for large files (like videos)
-  (setq large-file-warning-threshold nil)
-  (use-package spacegray-theme :defer t)
-  (use-package doom-themes :defer t)
-  (use-package solarized-theme :config (load-theme 'solarized-dark t))
-
-  ;; Set the font face based on platform
-  (on-platform-do
-   ((windows cygwin) (set-face-attribute 'default nil :font "Fira Mono:antialias=subpixel" :height 130))
-    (osx (set-face-attribute 'default nil :font "Fira Mono" :height 170))
-    (linux (set-face-attribute 'default nil :font "Fira Code Retina" :height 220)))
-
-  ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 200)
-
-  ;; Set the variable pitch face
-  ;;(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 245 :weight 'regular)
-
-
-  (column-number-mode)
-  (global-display-line-numbers-mode t)
-
-  ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-                  erc-mode-hook
-                  term-mode-hook
-                  eshell-mode-hook
-                  vterm-mode-hook
-                  neotree-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+(use-package solarized-theme :config (load-theme 'solarized-dark t))
   (defun edit-config-file ()
     (interactive)
     (find-file (concat config-load-path "emacs-init.org")))
@@ -153,8 +62,6 @@
       version-control t)
 
 (setq create-lockfiles nil)
-(auto-save-visited-mode t)
-(auto-revert-mode t)
 ;; Load desktop buffers lazily.
   (setq desktop-lazy-idle-delay 2)
   (setq desktop-lazy-verbose nil)
@@ -186,6 +93,12 @@
      "^/\\(?:ssh\\|su\\|sudo\\)?:" ;; ignore tramp/ssh files
      ))
 (setq-default recent-save-file "~/.emacs.d/recentf"))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(setq inhibit-startup-message t)
+(setq initial-major-mode 'emacs-lisp-mode)
+(setq initial-scratch-message nil)
 (use-package pdf-tools
   ;  :if (not (string-equal system-type "windows-nt"))
   :mode (("\\.pdf\\'" . pdf-view-mode))
@@ -292,11 +205,18 @@
 (use-package org-bullets
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
+;; Set to the location of your Org files on your local system
+;; use iCloud client on Windows
+(if (eq system-type 'windows-nt)
+  (setq org-directory (expand-file-name "C:/Users/egronei/iCloudDrive/iCloud~com~appsonthemove~beorg/org/"))
+  (setq org-directory (expand-file-name "~/org/")))
+
+
 ;; Set Keybindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-switchb)
+(global-set-key "\C-cb" 'org-iswitchb)
 
 ;; Set Preferences
 (setq org-completion-use-ido nil
@@ -312,22 +232,12 @@
 ;; Which files open with emacs? Or system default app...
 (add-to-list 'org-file-apps '("\\.xls\\'" . default))
 (add-to-list 'org-file-apps '("\\.xlsx\\'" . default))
-;; Set to the location of your Org files on your local system
-;; use iCloud client on Windows
-(if (eq system-type 'windows-nt)
-  (setq org-directory (expand-file-name "C:/Users/egronei/iCloudDrive/iCloud~com~appsonthemove~beorg/org/"))
-  (setq org-directory (expand-file-name "~/org/")))
-
-
 (setq org-default-notes-file (concat org-directory "notes.org"))
-(setq org-inbox-path (concat org-directory "inbox.org"))
-(setq org-gtd-path (concat org-directory "gtd.org"))
-(setq org-tickler-path (concat org-directory "tickler.org"))
-(setq org-someday-path (concat org-directory "someday.org"))
-(setq org-agenda-files `(,org-inbox-path ,org-gtd-path ,org-tickler-path))
-(setq org-refile-targets '((org-gtd-path :maxlevel . 1)
-                           (org-tickler-path :level . 2)
-                           (org-someday-path :maxlevel . 2)))
+(setq org-agenda-files (list (concat org-directory "inbox.org")
+                      (concat org-directory "gtd.org")
+                      (concat org-directory "tickler.org")))
+(setq org-refile-targets
+        '((org-agenda-files :maxlevel . 1)))
 
 (setq org-agenda-custom-commands
   (quote (("d" todo "DELEGATED" nil)
@@ -353,11 +263,20 @@
   (:endgroup . nil)
   (:startgroup . nil)
     ("@errands" . ?e)
-    ("@house" . ?s)
-    ("@now" . ?n)
-    ("@online" . ?o)
+    ("@house" . ?u)
+    ("@computer" . ?c)
     ("@phone" . ?p)
     ("@office" . ?f)
+  (:endgroup . nil)
+  (:startgroup . nil)
+    ("Comms" . ?c)
+    ("Comp" . ?p)
+    ("CoOps" . ?s)
+    ("Recruitment" . ?r)
+    ("ProductGov" . ?g)
+    ("ITM" . ?i)
+    ("Security" . ?s)
+    ("Students" . ?t)
   (:endgroup . nil)
 ))
  (setq org-habit-following-days 30)
@@ -380,34 +299,9 @@
   ;; Org-Protocol entries
 	("p" "Protocol" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
         "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-	("L" "Protocol Link" entry (file+function ,(concat org-directory "inbox.org") find-date-tree)
+	("L" "Protocol Link" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
         "* %? [[%:link][%:description]] \nCaptured On: %U")
 ))
-
-(defun get-year-and-month ()
-  (list (format-time-string "%Y") (format-time-string "%B")))
-
-(defun find-date-tree ()
-  (let* ((path (get-year-and-month))
-         (level 1)
-         end)
-    (unless (derived-mode-p 'org-mode)
-      (error "Target buffer \"%s\" should be in Org mode" (current-buffer)))
-    (goto-char (point-min))
-    (dolist (heading path)
-      (let ((re (format org-complex-heading-regexp-format
-                        (regexp-quote heading)))
-            )
-        (if (re-search-forward re end t)
-            (goto-char (point-at-bol)) 
-          (progn
-            (or (bolp) (insert "\n"))
-            (if (/= (point) (point-min)) (org-end-of-subtree t t))
-            (insert (make-string level ?*) " " heading "\n"))))
-      (setq level (1+ level))
-      (setq end (save-excursion (org-end-of-subtree t t))))
-    (org-end-of-subtree)))
-
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "DELEGATED(e@/!)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
@@ -473,7 +367,8 @@
   :ensure t
   :diminish yas-minor-mode
   :config (setq yas-snippet-dirs
-           '("~/.emacs.d/snippets"                 ;; local snippets
+           '("~/.dotfiles/conf/emacs.d/snippets"   ;; git synced snippets
+             "~/.emacs.d/snippets"                 ;; local snippets
            ))
           (yas-global-mode 1))
 (use-package which-key

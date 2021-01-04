@@ -2,64 +2,6 @@
 #+AUTHOR: Neil Grogan
 #+BABEL: :cache yes
 
-* Helper Functions
-
-** Platform Helpers
-
-Here are a couple helpful functions for doing things based on what platform
-Emacs is running on.
-
-#+begin_src emacs-lisp
-
-  ;; Helper function for changing OS platform keywords to system-type strings
-  (defun platform-keyword-to-string (platform-keyword)
-    (cond
-     ((eq platform-keyword 'windows) "windows-nt")
-     ((eq platform-keyword 'cygwin) "cygwin")
-     ((eq platform-keyword 'osx) "darwin")
-     ((eq platform-keyword 'linux) "gnu/linux")))
-
-  ;; Define a macro that runs an elisp expression only on a particular platform
-  (defmacro on-platform-do (&rest platform-expressions)
-    `(cond
-      ,@(mapcar
-         (lambda (platform-expr)
-       (let ((keyword (nth 0 platform-expr))
-             (expr (nth 1 platform-expr)))
-         `(,(if (listp keyword)
-           `(or
-             ,@(mapcar
-                (lambda (kw) `(string-equal system-type ,(platform-keyword-to-string kw)))
-                keyword))
-            `(string-equal system-type ,(platform-keyword-to-string keyword)))
-            ,expr)))
-         platform-expressions)))
-
-#+end_src
-
-
-* Keep .emacs.d Clean
-
-I don't want a bunch of transient files showing up as untracked in the Git repo so I move them all to another location.
-
-#+begin_src emacs-lisp
-
-;; Keep transient cruft out of ~/.emacs.d/
-(setq user-emacs-directory "~/.cache/emacs/"
-      backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory)))
-      url-history-file (expand-file-name "url/history" user-emacs-directory)
-      auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-emacs-directory)
-      projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-emacs-directory))
-
-;; Keep customization settings in a temporary file (thanks Ambrevar!)
-(setq custom-file
-      (if (boundp 'server-socket-dir)
-          (expand-file-name "custom.el" server-socket-dir)
-        (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
-(load custom-file t)
-
-#+end_src
-
 * Packages
 ** Package Repositories
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
@@ -83,7 +25,7 @@ I don't want a bunch of transient files showing up as untracked in the Git repo 
 
 ** Mac OS
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
-(on-platform-do (mac
+(when (memq window-system '(mac ns))
   (setq ns-pop-up-frames nil
         x-select-enable-clIpboard t)
 (use-package exec-path-from-shell
@@ -91,7 +33,7 @@ I don't want a bunch of transient files showing up as untracked in the Git repo 
   :ensure t
   :config (exec-path-from-shell-initialize))
   (when (fboundp 'mac-auto-operator-composition-mode)
-    (mac-auto-operator-composition-mode 1))))'
+    (mac-auto-operator-composition-mode 1)))'
 #+END_SRC
 ** Security
    Inspired by [[https://ogbe.net/emacsconfig.html][ogbe.net]] and [[https://glyph.twistedmatrix.com/2015/11/editor-malware.html][Your Text Editor Is Malware]].
@@ -134,87 +76,10 @@ And force the install of missing packages.
        calendar-location-name "Athlone, Ireland")
  #+END_SRC
 
-* General Configuration
-
-** User Interface
-
-Clean up Emacs' user interface, make it more minimal.
-
-#+begin_src emacs-lisp
-
-  ;; Thanks, but no thanks
-  (setq inhibit-startup-message t)
-  (scroll-bar-mode -1)        ; Disable visible scrollbar
-  (tool-bar-mode -1)          ; Disable the toolbar
-  (tooltip-mode -1)           ; Disable tooltips
-  (set-fringe-mode 10)        ; Give some breathing room
-
-  ;;(menu-bar-mode -1)            ; Disable the menu bar
-
-  ;; Set up the visible bell
-  (setq visible-bell t)
-
-  ;; Emacs Lisp as starting mode
-  (setq initial-major-mode 'emacs-lisp-mode)
-  
-  ;; Empty Scratch Buffer
-  (setq initial-scratch-message nil)
-
-  ;; Don't warn following Symlinks
-  (setq vc-follow-symlinks t)
-
-  ;; Don't warn for large files (like videos)
-  (setq large-file-warning-threshold nil)
+* Theme
+ #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
+(use-package solarized-theme :config (load-theme 'solarized-dark t))
 #+END_SRC
-
-
-** Theme
- #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code
-  (use-package spacegray-theme :defer t)
-  (use-package doom-themes :defer t)
-  (use-package solarized-theme :config (load-theme 'solarized-dark t))
-#+END_SRC
-
-** Font
-
-*** Set the font
-
-Different platforms need different default font sizes, and
-[[https://mozilla.github.io/Fira/][Fira Mono]] is currently my favorite face.
-
-#+begin_src emacs-lisp
-
-  ;; Set the font face based on platform
-  (on-platform-do
-   ((windows cygwin) (set-face-attribute 'default nil :font "Fira Mono:antialias=subpixel" :height 130))
-    (osx (set-face-attribute 'default nil :font "Fira Mono" :height 170))
-    (linux (set-face-attribute 'default nil :font "Fira Code Retina" :height 220)))
-
-  ;; Set the fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 200)
-
-  ;; Set the variable pitch face
-  ;;(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 245 :weight 'regular)
-
-#+end_src
-
-** Line Numbers
-Enable line numbers and customize their format.
-
-#+begin_src emacs-lisp
-
-  (column-number-mode)
-  (global-display-line-numbers-mode t)
-
-  ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-                  erc-mode-hook
-                  term-mode-hook
-                  eshell-mode-hook
-                  vterm-mode-hook
-                  neotree-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
-#+end_src
 
 * Quickly edit this config file
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
@@ -242,8 +107,6 @@ with a trailing =~= turd.
       version-control t)
 
 (setq create-lockfiles nil)
-(auto-save-visited-mode t)
-(auto-revert-mode t)
 #+END_SRC
 
 ** Desktop Save Mode
@@ -290,6 +153,22 @@ but is not a high priority.
      "^/\\(?:ssh\\|su\\|sudo\\)?:" ;; ignore tramp/ssh files
      ))
 (setq-default recent-save-file "~/.emacs.d/recentf"))
+#+END_SRC
+** Disable GUI Elements
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+#+END_SRC
+** Disable splash screen
+And set it in emacs-lisp mode
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
+(setq inhibit-startup-message t)
+(setq initial-major-mode 'emacs-lisp-mode)
+#+END_SRC
+** Empty Scratch buffer
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
+(setq initial-scratch-message nil)
 #+END_SRC
 
 * PDF Tools
@@ -477,7 +356,8 @@ Git Gutter
 
 ** Org Agenda
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
-(setq org-agenda-files `(,org-inbox-path ,org-gtd-path ,org-tickler-path))
+(setq org-agenda-files (cons org-inbox-path
+                          (cons org-gtd-path org-tickler-path)))
 (setq org-refile-targets '((org-gtd-path :maxlevel . 1)
                            (org-tickler-path :level . 2)
                            (org-someday-path :maxlevel . 2)))
@@ -544,34 +424,9 @@ Git Gutter
   ;; Org-Protocol entries
 	("p" "Protocol" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
         "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-	("L" "Protocol Link" entry (file+function ,(concat org-directory "inbox.org") find-date-tree)
+	("L" "Protocol Link" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
         "* %? [[%:link][%:description]] \nCaptured On: %U")
 ))
-
-(defun get-year-and-month ()
-  (list (format-time-string "%Y") (format-time-string "%B")))
-
-(defun find-date-tree ()
-  (let* ((path (get-year-and-month))
-         (level 1)
-         end)
-    (unless (derived-mode-p 'org-mode)
-      (error "Target buffer \"%s\" should be in Org mode" (current-buffer)))
-    (goto-char (point-min))
-    (dolist (heading path)
-      (let ((re (format org-complex-heading-regexp-format
-                        (regexp-quote heading)))
-            )
-        (if (re-search-forward re end t)
-            (goto-char (point-at-bol)) 
-          (progn
-            (or (bolp) (insert "\n"))
-            (if (/= (point) (point-min)) (org-end-of-subtree t t))
-            (insert (make-string level ?*) " " heading "\n"))))
-      (setq level (1+ level))
-      (setq end (save-excursion (org-end-of-subtree t t))))
-    (org-end-of-subtree)))
-
 #+END_SRC
 
 ** States of tasks in Org mode
@@ -669,7 +524,8 @@ With a twist of helm
   :ensure t
   :diminish yas-minor-mode
   :config (setq yas-snippet-dirs
-           '("~/.emacs.d/snippets"                 ;; local snippets
+           '("~/.dotfiles/conf/emacs.d/snippets"   ;; git synced snippets
+             "~/.emacs.d/snippets"                 ;; local snippets
            ))
           (yas-global-mode 1))
 #+END_SRC
