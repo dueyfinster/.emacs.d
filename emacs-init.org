@@ -106,6 +106,10 @@ with a trailing =~= turd.
       global-auto-revert-mode 1
       version-control t)
 
+;; Refresh files if changed on disk and auto-save
+(auto-save-visited-mode t)
+(auto-revert-mode t)
+
 (setq create-lockfiles nil)
 #+END_SRC
 
@@ -123,6 +127,12 @@ with a trailing =~= turd.
   (desktop-save-mode t)
 #+END_SRC
 
+** Encoding
+   Set UTF-8 as default encoding
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+#+END_SRC
 ** Require
 Some features are not loaded by default to minimize initialization time,
 so they have to be required (or loaded, if you will). =require=-calls
@@ -433,6 +443,7 @@ Git Gutter
 #+BEGIN_SRC emacs-lisp :tangle yes :results silent :exports code 
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "PROJ(p)" "|" "DONE(d)")
               (sequence "DELEGATED(e@/!)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
 (setq org-todo-keyword-faces
@@ -443,6 +454,7 @@ Git Gutter
               ("DELEGATED" :foreground "orange" :weight bold)
               ("HOLD" :foreground "magenta" :weight bold)
               ("CANCELLED" :foreground "forest green" :weight bold)
+              ("PROJ" :foreground "cornflower blue" :weight bold)
               ("MEETING" :foreground "forest green" :weight bold)
               ("PHONE" :foreground "forest green" :weight bold))))
 #+END_SRC

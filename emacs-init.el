@@ -1,4 +1,4 @@
-;; Don't edit this file, edit c:/Users/egronei/.dotfiles/conf/emacs.d/emacs-init.org instead ...
+;; Don't edit this file, edit c:/Users/egronei/.emacs.d/emacs-init.org instead ...
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -61,6 +61,10 @@
       global-auto-revert-mode 1
       version-control t)
 
+;; Refresh files if changed on disk and auto-save
+(auto-save-visited-mode t)
+(auto-revert-mode t)
+
 (setq create-lockfiles nil)
 ;; Load desktop buffers lazily.
   (setq desktop-lazy-idle-delay 2)
@@ -72,6 +76,8 @@
 
   ;; Enable desktop.
   (desktop-save-mode t)
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
 (use-package recentf
     :defer 1
     :config (recentf-mode 1)
@@ -205,18 +211,11 @@
 (use-package org-bullets
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-;; Set to the location of your Org files on your local system
-;; use iCloud client on Windows
-(if (eq system-type 'windows-nt)
-  (setq org-directory (expand-file-name "C:/Users/egronei/iCloudDrive/iCloud~com~appsonthemove~beorg/org/"))
-  (setq org-directory (expand-file-name "~/org/")))
-
-
 ;; Set Keybindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-iswitchb)
+(global-set-key "\C-cb" 'org-switchb)
 
 ;; Set Preferences
 (setq org-completion-use-ido nil
@@ -232,12 +231,23 @@
 ;; Which files open with emacs? Or system default app...
 (add-to-list 'org-file-apps '("\\.xls\\'" . default))
 (add-to-list 'org-file-apps '("\\.xlsx\\'" . default))
+;; Set to the location of your Org files on your local system
+;; use iCloud client on Windows
+(if (eq system-type 'windows-nt)
+  (setq org-directory (expand-file-name "C:/Users/egronei/iCloudDrive/iCloud~com~appsonthemove~beorg/org/"))
+  (setq org-directory (expand-file-name "~/org/")))
+
+
 (setq org-default-notes-file (concat org-directory "notes.org"))
-(setq org-agenda-files (list (concat org-directory "inbox.org")
-                      (concat org-directory "gtd.org")
-                      (concat org-directory "tickler.org")))
-(setq org-refile-targets
-        '((org-agenda-files :maxlevel . 1)))
+(setq org-inbox-path (concat org-directory "inbox.org"))
+(setq org-gtd-path (concat org-directory "gtd.org"))
+(setq org-tickler-path (concat org-directory "tickler.org"))
+(setq org-someday-path (concat org-directory "someday.org"))
+(setq org-agenda-files (cons org-inbox-path
+                          (cons org-gtd-path org-tickler-path)))
+(setq org-refile-targets '((org-gtd-path :maxlevel . 1)
+                           (org-tickler-path :level . 2)
+                           (org-someday-path :maxlevel . 2)))
 
 (setq org-agenda-custom-commands
   (quote (("d" todo "DELEGATED" nil)
@@ -263,20 +273,11 @@
   (:endgroup . nil)
   (:startgroup . nil)
     ("@errands" . ?e)
-    ("@house" . ?u)
-    ("@computer" . ?c)
+    ("@house" . ?s)
+    ("@now" . ?n)
+    ("@online" . ?o)
     ("@phone" . ?p)
     ("@office" . ?f)
-  (:endgroup . nil)
-  (:startgroup . nil)
-    ("Comms" . ?c)
-    ("Comp" . ?p)
-    ("CoOps" . ?s)
-    ("Recruitment" . ?r)
-    ("ProductGov" . ?g)
-    ("ITM" . ?i)
-    ("Security" . ?s)
-    ("Students" . ?t)
   (:endgroup . nil)
 ))
  (setq org-habit-following-days 30)
@@ -304,6 +305,7 @@
 ))
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "PROJ(p)" "|" "DONE(d)")
               (sequence "DELEGATED(e@/!)" "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
 (setq org-todo-keyword-faces
@@ -314,6 +316,7 @@
               ("DELEGATED" :foreground "orange" :weight bold)
               ("HOLD" :foreground "magenta" :weight bold)
               ("CANCELLED" :foreground "forest green" :weight bold)
+              ("PROJ" :foreground "cornflower blue" :weight bold)
               ("MEETING" :foreground "forest green" :weight bold)
               ("PHONE" :foreground "forest green" :weight bold))))
 (org-babel-do-load-languages
