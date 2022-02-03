@@ -182,8 +182,7 @@
 (setq org-someday-path (concat org-directory "someday.org"))
 
 ;; Org Agenda
-(setq org-agenda-files (cons org-inbox-path
-                          (cons org-gtd-path org-tickler-path)))
+(setq org-agenda-files (list org-directory))
 (setq org-refile-targets '((org-gtd-path :maxlevel . 1)
                            (org-tickler-path :level . 2)
                            (org-someday-path :maxlevel . 2)))
