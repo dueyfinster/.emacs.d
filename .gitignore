@@ -6,6 +6,8 @@ transient/
 bookmarks
 helm-adaptive-history
 recentf
+custom.el
+ido.last
 *.elc
 *.desktop
 *.lock
