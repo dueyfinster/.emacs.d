@@ -21,6 +21,19 @@ steps:
     settings:
       from:
         from_secret: EMAIL_FROM
+      subject: >
+        [{{ build.status }}]
+        {{ repo.owner }}/{{ repo.name }}
+        ({{ commit.branch }})
+      body: >
+        Build number: # {{ build.number }}
+        Build link: {{ build.link }}
+        Build started: {{ build.started }}
+        Build ended: {{ build.finished }}
+        Commit author: {{ commit.author.name }}
+        Commit message: {{ commit.message }}
+        Commit branch: {{ commit.branch }}
+        Commit link: {{ commit.link }}
       branch:
         - develop
         - master
