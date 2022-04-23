@@ -5,9 +5,23 @@ name: default
 
 steps:
   - name: build
-    image: silex/emacs:27.2-alpine
+    image: silex/emacs:latest
     commands:
       - emacs -Q --batch -L . --eval "(setq byte-compile-error-on-warn t)" -f batch-byte-compile init.el
+ 
+  - name: Email Notification
+    image: drillster/drone-email
+    host:
+      from_secret: EMAIL_SMTP_HOST
+    username:
+      from_secret: EMAIL_USER
+    password:
+      from_secret: EMAIL_USER
+    from:
+      from_secret: EMAIL_USER
+    when:
+      status: [ changed, failure ]
+ 
   - name: Slack Notifications
     image: plugins/slack
     channel: dev
