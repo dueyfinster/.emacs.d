@@ -18,7 +18,7 @@ steps:
     password:
       from_secret: EMAIL_USER
     from:
-      from_secret: EMAIL_USER
+      from_secret: EMAIL_FROM
     when:
       status: [ changed, failure ]
  
