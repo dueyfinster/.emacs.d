@@ -12,3 +12,5 @@ ido.last
 *.desktop
 *.lock
 *.eld
+.org-id-locations
+org-roam.do
