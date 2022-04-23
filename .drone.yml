@@ -11,14 +11,19 @@ steps:
  
   - name: Email Notification
     image: drillster/drone-email
-    host:
-      from_secret: EMAIL_SMTP_HOST
-    username:
-      from_secret: EMAIL_USER
-    password:
-      from_secret: EMAIL_PASS
-    from:
-      from_secret: EMAIL_FROM
+    environment:
+      EMAIL_HOST:
+        from_secret: EMAIL_SMTP_HOST
+      EMAIL_USERNAME:
+        from_secret: EMAIL_USER
+      EMAIL_PASSWORD:
+        from_secret: EMAIL_PASS
+    settings:
+      from:
+        from_secret: EMAIL_FROM
+      branch:
+        - develop
+        - master
     when:
       status: [ changed, failure ]
  
