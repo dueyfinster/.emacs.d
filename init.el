@@ -16,8 +16,8 @@
 (set-face-background 'lazy-highlight "#960")
 (set-face-foreground 'lazy-highlight "#ccc")
 (set-face-foreground 'font-lock-comment-face "#fc0")
-  
-;; ido-mode 
+
+;; ido-mode
 (ido-mode 1)
 (ido-everywhere)
 (setq ido-enable-flex-matching t)
@@ -232,7 +232,7 @@
                "* TODO %i%?")
   ("w" "Work Task" entry (file+headline ,(concat org-directory "gtd.org") "Work")
                "* TODO %i%?")
-  ("t" "Todo [inbox]" entry (file+headline ,(concat org-directory "inbox.org") ,(format "%s %s" (format-time-string "%Y")(format-time-string "%B"))) 
+  ("t" "Todo [inbox]" entry (file+headline ,(concat org-directory "inbox.org") ,(format "%s %s" (format-time-string "%Y")(format-time-string "%B")))
 "* TODO %i%?\n %U")
   ("m" "Meeting" entry (file+headline ,(concat org-directory "gtd.org") "Work")
                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
@@ -295,7 +295,7 @@
          ("C-M-i"    . completion-at-point))
   :config
   (org-roam-setup))
-  
+
 ;; Projectile
 (use-package projectile
   :ensure t
