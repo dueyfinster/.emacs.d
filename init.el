@@ -16,12 +16,11 @@
 (set-face-background 'lazy-highlight "#960")
 (set-face-foreground 'lazy-highlight "#ccc")
 (set-face-foreground 'font-lock-comment-face "#fc0")
-
-;; Interactively do things.
+  
+;; ido-mode 
 (ido-mode 1)
 (ido-everywhere)
 (setq ido-enable-flex-matching t)
-(fido-mode)
 
 ;; Show stray whitespace.
 (setq-default show-trailing-whitespace t)
@@ -126,6 +125,12 @@
 (require 'server)
 (unless (server-running-p)
   (server-start))
+
+;; Interactively do things.
+;; fido-mode
+;; `fido-mode' is provided by icomplete.el
+(use-package icomplete
+  :hook (after-init . fido-mode))
 
 ;; magit
 (use-package magit
