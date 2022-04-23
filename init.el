@@ -284,7 +284,8 @@
          ("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert))
   :config
-  (org-roam-setup))
+  (org-roam-setup)
+  (org-roam-v2-ack t))
   
 ;; Projectile
 (use-package projectile
