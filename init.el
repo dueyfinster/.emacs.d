@@ -50,6 +50,10 @@
 (setq auto-save-file-name-transforms '((".*" "~/.tmp/emacs/auto-save/" t)))
 (setq backup-directory-alist '(("." . "~/.tmp/emacs/backup/")))
 
+;; Refresh files if changed on disk and auto-save
+(auto-save-visited-mode t)
+(auto-revert-mode t)
+
 ;; Do not move the current file while creating backup.
 (setq backup-by-copying t)
 
