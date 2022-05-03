@@ -278,7 +278,6 @@
   (css . t)
   (ditaa . t)
   (gnuplot . t)
-  (ledger . t)
   (java . t)
   (python . t)
   (ruby . t)
