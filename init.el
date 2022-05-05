@@ -1,3 +1,4 @@
+
 ;; Customize user interface.
 (menu-bar-mode 1)
 (when (display-graphic-p)
@@ -275,6 +276,7 @@
 '((emacs-lisp . t)
   (C . t)
   (css . t)
+  (dot . t)
   (ditaa . t)
   (gnuplot . t)
   (java . t)
