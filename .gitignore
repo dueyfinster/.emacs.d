@@ -13,4 +13,4 @@ ido.last
 *.lock
 *.eld
 .org-id-locations
-org-roam.do
+org-roam.db
