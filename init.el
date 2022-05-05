@@ -1,5 +1,3 @@
-
-
 ;; Customize user interface.
 (menu-bar-mode 1)
 (when (display-graphic-p)
@@ -292,9 +290,14 @@
   :custom
   (org-roam-directory (file-truename "~/repos/notes/notes"))
   (org-roam-completion-everywhere t)
+  (org-roam-capture-templates '(("d" "default" plain "%?"
+                                 :target (file+head "${slug}.org"
+                                                    "#+title: ${title}\n")
+                                 :unnarrowed t)))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
          :map org-mode-map
          ("C-M-i"    . completion-at-point))
   :config
