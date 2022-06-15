@@ -1,5 +1,11 @@
 ---
 name: Emacs Config
+
+on:
+  push:
+    branches:
+      - master
+
 jobs:
   build:
     strategy:
