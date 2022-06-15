@@ -1,5 +1,5 @@
 ---
-name: Emacs Config
+name: Test Emacs Config
 
 on:
   push:
@@ -14,8 +14,13 @@ jobs:
         emacs-version: [28.1]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout
       - uses: actions/checkout@v2
-
+      
+      - name: Setup Emacs
       - uses: jcs090218/setup-emacs@master
         with:
           version: ${{ matrix.emacs-version }}
+          
+      - name: Validate Config
+        run: emacs -Q --batch -L . --eval "(setq byte-compile-error-on-warn t)" -f batch-byte-compile init.el
