@@ -1,4 +1,5 @@
 
+
 ;; Customize user interface.
 (menu-bar-mode 1)
 (when (display-graphic-p)
@@ -125,10 +126,11 @@
 (global-set-key (kbd "C-c t") 'show-current-time)
 (global-set-key (kbd "C-c d") 'delete-trailing-whitespace)
 
-;; Start server.
 (require 'server)
-(unless (server-running-p)
-  (server-start))
+;; Start a server if (server-running-p) does not return t (e.g. if it
+;; returns nil or :other)
+(or (eq (server-running-p) t)
+    (server-start))
 
 ;; Interactively do things.
 ;; fido-mode
