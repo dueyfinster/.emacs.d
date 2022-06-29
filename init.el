@@ -18,6 +18,15 @@
 (set-face-foreground 'lazy-highlight "#ccc")
 (set-face-foreground 'font-lock-comment-face "#fc0")
 
+;; Font Choices
+(cond
+  ((find-font (font-spec :name "Consolas"))
+   (set-frame-font "Consolas-12"))
+ ((find-font (font-spec :name "Fira Code"))
+   (set-frame-font "Fira Code Light-11"))
+  ((find-font (font-spec :name "DejaVu Sans Mono"))
+   (set-frame-font "DejaVu Sans Mono-11")))
+
 ;; ido-mode
 (ido-mode 1)
 (ido-everywhere)
