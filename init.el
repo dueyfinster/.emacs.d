@@ -21,7 +21,7 @@
 ;; ido-mode
 (ido-mode 1)
 (ido-everywhere)
-(setq ido-enable-flex-matching t)
+(setq ido-mode-flex-matching t)
 
 ;; Show stray whitespace.
 (setq-default show-trailing-whitespace t)
