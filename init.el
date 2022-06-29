@@ -37,11 +37,6 @@
 ;; Display the distance between two tab stops as 4 characters wide.
 (setq-default tab-width 4)
 
-;; Indentation setting for various languages.
-(setq c-basic-offset 4)
-(setq js-indent-level 2)
-(setq css-indent-offset 2)
-
 ;; Highlight matching pairs of parentheses.
 (setq show-paren-delay 0)
 (show-paren-mode)
