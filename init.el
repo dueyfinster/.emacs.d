@@ -20,10 +20,14 @@
 
 ;; Font Choices
 (cond
+ ((find-font (font-spec :name "Fira Code"))
+  (set-frame-font "Fira Code-13"))
+
+ ;; Fallback Options
   ((find-font (font-spec :name "Consolas"))
    (set-frame-font "Consolas-12"))
- ((find-font (font-spec :name "Fira Code"))
-   (set-frame-font "Fira Code Light-11"))
+  ((find-font (font-spec :name "Monaco"))
+   (set-frame-font "Monaco-12"))
   ((find-font (font-spec :name "DejaVu Sans Mono"))
    (set-frame-font "DejaVu Sans Mono-11")))
 
