@@ -1,5 +1,3 @@
-
-
 ;; Customize user interface.
 (menu-bar-mode 1)
 (when (display-graphic-p)
@@ -8,7 +6,11 @@
 (setq inhibit-startup-screen t)
 (column-number-mode)
 
-;; Dark theme.
+;; Dark theme
+(defadvice load-theme (before clear-previous-themes activate)
+  "Clear existing theme settings instead of layering them"
+  (mapc #'disable-theme custom-enabled-themes))
+
 (load-theme 'wombat)
 (set-face-background 'default "#111")
 (set-face-background 'cursor "#c96")
@@ -18,18 +20,19 @@
 (set-face-foreground 'lazy-highlight "#ccc")
 (set-face-foreground 'font-lock-comment-face "#fc0")
 
+
 ;; Font Choices
 (cond
  ((find-font (font-spec :name "Fira Code"))
-  (set-frame-font "Fira Code-13"))
+  (set-frame-font "Fira Code-15"))
 
  ;; Fallback Options
   ((find-font (font-spec :name "Consolas"))
-   (set-frame-font "Consolas-12"))
+   (set-frame-font "Consolas-15"))
   ((find-font (font-spec :name "Monaco"))
-   (set-frame-font "Monaco-12"))
+   (set-frame-font "Monaco-15"))
   ((find-font (font-spec :name "DejaVu Sans Mono"))
-   (set-frame-font "DejaVu Sans Mono-11")))
+   (set-frame-font "DejaVu Sans Mono-15")))
 
 ;; ido-mode
 (ido-mode 1)
@@ -133,6 +136,12 @@
 ;; Custom key sequences.
 (global-set-key (kbd "C-c t") 'show-current-time)
 (global-set-key (kbd "C-c d") 'delete-trailing-whitespace)
+(global-set-key ["M-["] 'next-buffer)
+(global-set-key ["M-]"] 'previous-buffer)
+
+;;; change window
+(global-set-key [(C-tab)] 'other-window)
+(global-set-key [(C-M-tab)] 'other-window)
 
 (require 'server)
 ;; Start a server if (server-running-p) does not return t (e.g. if it
