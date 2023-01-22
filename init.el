@@ -6,6 +6,9 @@
 (setq inhibit-startup-screen t)
 (column-number-mode)
 
+;; UTF-8 mode
+(set-language-environment "UTF-8")
+
 ;; Dark theme
 (defadvice load-theme (before clear-previous-themes activate)
   "Clear existing theme settings instead of layering them"
