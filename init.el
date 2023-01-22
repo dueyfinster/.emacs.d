@@ -38,9 +38,9 @@
    (set-frame-font "DejaVu Sans Mono-15")))
 
 ;; ido-mode
-(ido-mode 1)
-(ido-everywhere)
-(defvar ido-mode-flex-matching t)
+;;(ido-mode 1)
+;;(ido-everywhere)
+;;(defvar ido-mode-flex-matching t)
 
 ;; Show stray whitespace.
 (setq-default show-trailing-whitespace t)
@@ -74,6 +74,18 @@
 
 ;; Disable lockfiles.
 (setq create-lockfiles nil)
+
+;; Set repos dir as default
+(setq default-directory "~/")
+
+;; Automatically revert buffers for changed files
+(global-auto-revert-mode t)
+
+;; remembering the last place you visited in a file
+(save-place-mode 1)
+
+;; Close all dired buffers after opening
+(setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; Workaround for https://debbugs.gnu.org/34341 in GNU Emacs <= 26.3.
 (when (and (version< emacs-version "26.3") (>= libgnutls-version 30603))
@@ -136,11 +148,13 @@
   (interactive)
   (message (current-time-string)))
 
+(require 'bind-key)
+
 ;; Custom key sequences.
 (global-set-key (kbd "C-c t") 'show-current-time)
 (global-set-key (kbd "C-c d") 'delete-trailing-whitespace)
-(global-set-key ["M-["] 'next-buffer)
-(global-set-key ["M-]"] 'previous-buffer)
+(global-set-key (kbd "M-[") 'next-buffer)
+(global-set-key (kbd "M-]") 'previous-buffer)
 
 ;;; change window
 (global-set-key [(C-tab)] 'other-window)
@@ -327,19 +341,53 @@
   :config
   (org-roam-setup))
 
+;; Helm
+(use-package helm
+  :config
+  (setq helm-buffers-fuzzy-matching t)
+  (define-key minibuffer-local-completion-map (kbd "SPC") 'self-insert-command)
+  (setq helm-recentf-fuzzy-match t))
+
+(use-package helm-rg)
+
 ;; Projectile
 (use-package projectile
   :ensure t
   :diminish projectile-mode
   :bind ("C-c p" . projectile-command-map)
   :config
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-sort-order 'recently-active)
+  (setq projectile-completion-system 'helm)
+  (setq projectile-per-project-compilation-buffer t)
+  (setq projectile-comint-mode t)
+  (setq compilation-read-command nil)
+  (helm-projectile-on)
   (projectile-mode))
 
+(use-package helm-projectile)
+
+;; Company
+(use-package company
+  :hook (prog-mode . company-mode)
+  :config
+  (setq company-minimum-prefix-length 2))
+
+  (global-company-mode)
+  (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
+
+(setq company-tooltip-align-annotations t)
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
 ;; Snippets
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
+  :bind
+  ("C-c y s" . yas-insert-snippet)
+  ("C-c y v" . yas-visit-snippet-file)
   :config (setq yas-snippet-dirs
            '("~/.emacs.d/snippets"                 ;; local snippets
            ))
@@ -355,3 +403,11 @@
   :ensure t
   :config
   (dashboard-setup-startup-hook))
+
+;; Doom modeline
+(use-package doom-modeline
+  :config
+  (setq doom-modeline-height 25)
+  (set-face-background 'doom-modeline-bar (face-background 'mode-line))
+  (setq doom-modeline-bar-width 1)
+  (doom-modeline-mode 1))
