@@ -309,11 +309,12 @@
 ;; Org babel
 (org-babel-do-load-languages
 'org-babel-load-languages
-'((emacs-lisp . t)
-  (C . t)
+'((C . t)
   (css . t)
   (dot . t)
   (ditaa . t)
+  (elixir . t)
+  (emacs-lisp . t)
   (gnuplot . t)
   (java . t)
   (python . t)
@@ -335,11 +336,18 @@
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
          :map org-mode-map
-         ("C-M-i"    . completion-at-point))
+         ("C-M-i" . completion-at-point)
+         :map org-roam-dailies-map
+         ("Y" . org-roam-dailies-capture-yesterday)
+         ("T" . org-roam-dailies-capture-tomorrow))
+  :bind-keymap
+  ("C-c n d" . org-roam-dailies-map)
   :config
+  (require 'org-roam-dailies) ;; Ensure the keymap is available
   (org-roam-setup))
+
+(setq org-roam-dailies-directory "journal/")
 
 ;; Helm
 (use-package helm
