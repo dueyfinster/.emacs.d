@@ -327,7 +327,7 @@
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory (file-truename "~/repos/notes/notes"))
+  (org-roam-directory (file-truename "~/notes"))
   (org-roam-completion-everywhere t)
   (org-roam-capture-templates '(("d" "default" plain "%?"
                                  :target (file+head "${slug}.org"
