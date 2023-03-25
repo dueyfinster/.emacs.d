@@ -317,6 +317,7 @@
   (emacs-lisp . t)
   (gnuplot . t)
   (java . t)
+  (js . t)
   (python . t)
   (ruby . t)
   (shell . t)))
