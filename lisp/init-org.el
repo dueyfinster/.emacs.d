@@ -149,7 +149,9 @@
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/notes")
+  (org-roam-directory (find-file "~/notes"))
+  (unless (file-exists-p org-roam-directory)
+    (make-directory org-roam-directory))
   (org-roam-completion-everywhere t)
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
