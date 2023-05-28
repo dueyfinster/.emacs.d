@@ -30,10 +30,15 @@
 (require 'init-projectile)
 (require 'init-grep)
 (require 'init-eglot)
-(require 'init-org)
+(require 'init-snippets)
+
+;; Support for Filetypes & Programming Languages
+(require 'init-elixir)
+(require 'init-erlang)
 (require 'init-java)
 (require 'init-markdown)
-(require 'init-snippets)
+(require 'init-org)
+(require 'init-python)
 
 ;; UTF-8 mode
 (set-language-environment "UTF-8")
