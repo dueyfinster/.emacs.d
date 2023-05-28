@@ -1,15 +1,9 @@
-;;; my-org.el -*- lexical-binding: t; -*-
+;;; init-org.el -*- lexical-binding: t; -*-
 
-;; Org mode
-(use-package org
-    :requires htmlize
-    :ensure t
-    :config
-     (add-to-list 'org-modules 'org-habit))
-(use-package org-protocol
-    :ensure nil)
-(use-package org-bullets
-  :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+(when *is-a-mac*
+  (maybe-require-package 'grab-mac-link))
+
+(maybe-require-package 'org-cliplink)
 
 ;; Set Keybindings
 (global-set-key "\C-cl" 'org-store-link)
@@ -29,8 +23,9 @@
 (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode %f"))
 
 ;; Which files open with emacs? Or system default app...
-(add-to-list 'org-file-apps '("\\.xls\\'" . default))
-(add-to-list 'org-file-apps '("\\.xlsx\\'" . default))
+(with-eval-after-load 'org
+  (add-to-list 'org-file-apps '("\\.xls\\'" . default))
+  (add-to-list 'org-file-apps '("\\.xlsx\\'" . default)))
 
 
 ;; Set to the location of your Org files on your local system

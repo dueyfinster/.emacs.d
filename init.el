@@ -22,12 +22,17 @@
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 (require 'init-benchmarking) ;; Measure startup time
 (require 'init-elpa)
+(require 'init-exec-path) ;; Set up $PATH
+(require 'init-utils)
 (require 'init-gui-frames)
 (require 'init-themes)
 (require 'init-git)
 (require 'init-projectile)
+(require 'init-grep)
 (require 'init-eglot)
 (require 'init-org)
+(require 'init-markdown)
+(require 'init-snippets)
 
 ;; UTF-8 mode
 (set-language-environment "UTF-8")
@@ -117,7 +122,7 @@
 
 
 ;; Install packages.
-(dolist (package '(markdown-mode paredit rainbow-delimiters))
+(dolist (package '(paredit rainbow-delimiters))
   (unless (package-installed-p package)
     (package-install package)))
 
@@ -176,44 +181,6 @@
 (use-package icomplete
   :hook (after-init . fido-mode))
 
-
-;; Helm
-(use-package helm
-  :config
-  (setq helm-buffers-fuzzy-matching t)
-  (define-key minibuffer-local-completion-map (kbd "SPC") 'self-insert-command)
-  (setq helm-recentf-fuzzy-match t))
-
-(use-package helm-rg)
-
-(use-package helm-projectile)
-
-;; Company
-(use-package company
-  :hook (prog-mode . company-mode)
-  :config
-  (setq company-minimum-prefix-length 2))
-
-  (global-company-mode)
-  (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
-
-(setq company-tooltip-align-annotations t)
-
-(use-package company-box
-  :hook (company-mode . company-box-mode))
-
-;; Snippets
-(use-package yasnippet
-  :ensure t
-  :diminish yas-minor-mode
-  :bind
-  ("C-c y s" . yas-insert-snippet)
-  ("C-c y v" . yas-visit-snippet-file)
-  :config (setq yas-snippet-dirs
-           '("~/.emacs.d/snippets"                 ;; local snippets
-           ))
-  (yas-global-mode 1))
-
 ;; which-key
 (use-package which-key
   :diminish which-key-mode
@@ -232,3 +199,16 @@
   (set-face-background 'doom-modeline-bar (face-background 'mode-line))
   (setq doom-modeline-bar-width 1)
   (doom-modeline-mode 1))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(org-cliplink grab-mac-link yasnippet yaml-mode whole-line-or-region which-key vlf use-package unfill symbol-overlay rg rainbow-delimiters paredit page-break-lines org-roam ns-auto-titlebar multiple-cursors move-dup mode-line-bell markdown-mode magit-todos list-unicode-display ibuffer-projectile highlight-escape-sequences gnu-elpa-keyring-update git-timemachine git-modes git-link git-blamed fullframe exec-path-from-shell disable-mouse diminish default-text-scale dashboard consult-eglot browse-kill-ring beacon avy)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
