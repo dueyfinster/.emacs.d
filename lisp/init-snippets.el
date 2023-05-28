@@ -2,16 +2,21 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package yasnippet
-  :ensure t
-  :diminish yas-minor-mode
-  :bind
-  ("C-c y s" . yas-insert-snippet)
-  ("C-c y v" . yas-visit-snippet-file)
-  :config (setq yas-snippet-dirs
-                '("~/.emacs.d/snippets" ;; local snippets
-                  ))
-  (yas-global-mode 1))
+(require-package 'yasnippet)
+(require-package 'yasnippet-snippets)
+(add-hook 'after-init-hook 'yas-global-mode)
+
+(setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+
+(with-eval-after-load 'yasnippet
+  (diminish 'yas-minor-mode)
+  (defun gen-cpp-header-tag()
+    (let* ((root (projectile-project-root))
+           (path (string-trim-left
+                  (file-name-sans-extension (buffer-file-name))
+                  root))
+           (name (replace-regexp-in-string "[./-]" "_" path)))
+      (concat (upcase name) "_H_"))))
 
 
 ;;; Package:

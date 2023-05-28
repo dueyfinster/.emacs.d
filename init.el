@@ -31,6 +31,7 @@
 (require 'init-grep)
 (require 'init-eglot)
 (require 'init-org)
+(require 'init-java)
 (require 'init-markdown)
 (require 'init-snippets)
 
