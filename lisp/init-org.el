@@ -16,19 +16,15 @@
 (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode %f"))
 
 ;; Which files open with emacs? Or system default app...
-;; (with-eval-after-load 'org
-;;  (require 'org-protocol)
-;;    (add-to-list 'org-modules 'org-protocol)
-  
-  ;; (when (version< emacs-version "27.1")
-  ;; (add-to-list 'org-file-apps '("\\.xlsx?\\'" . default)))
-;;  )
+(with-eval-after-load 'org
+  (add-to-list 'org-file-apps '("\\.xls\\'" . default))
+  (add-to-list 'org-file-apps '("\\.xlsx\\'" . default)))
 
 
 ;; Set to the location of your Org files on your local system
 ;; use iCloud client on Windows
 (if (eq system-type 'windows-nt)
-    (setq org-directory (expand-file-name "C:/Users/egronei/iCloudDrive/iCloud~com~appsonthemove~beorg/org/"))
+  (setq org-directory (expand-file-name "C:/Users/egronei/iCloudDrive/iCloud~com~appsonthemove~beorg/org/"))
   (setq org-directory (expand-file-name "~/org/")))
 
 
