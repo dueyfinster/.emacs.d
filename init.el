@@ -44,6 +44,7 @@
 (require 'init-themes)
 (require 'init-company)
 (require 'init-git)
+(require 'init-locales)
 (require 'init-projectile)
 (require 'init-grep)
 (require 'init-eglot)
@@ -67,9 +68,6 @@
 (require 'init-python)
 (require 'init-terraform)
 (require 'init-yaml)
-
-;; UTF-8 mode
-(set-language-environment "UTF-8")
 
 ;; Show stray whitespace.
 (setq-default show-trailing-whitespace t)
