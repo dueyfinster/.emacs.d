@@ -5,7 +5,7 @@ name: default
 
 steps:
   - name: build
-    image: silex/emacs:28.2
+    image: silex/emacs:28.2-ci
     commands:
       - ./test-startup.sh
  
