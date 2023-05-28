@@ -58,6 +58,7 @@
 ;; Support for Filetypes & Programming Languages
 (require 'init-css)
 (require 'init-csv)
+(require 'init-docker)
 (require 'init-elixir)
 (require 'init-erlang)
 (require 'init-html)
