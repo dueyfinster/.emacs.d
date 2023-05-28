@@ -48,6 +48,7 @@
 (require 'init-grep)
 (require 'init-eglot)
 (require 'init-flymake)
+(require 'init-mmm)
 (require 'init-snippets)
 (require 'init-paredit)
 (require 'init-recentf)
