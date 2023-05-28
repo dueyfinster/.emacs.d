@@ -2,8 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'org)
-
 (when *is-a-mac*
   (maybe-require-package 'grab-mac-link))
 
@@ -21,7 +19,8 @@
 (with-eval-after-load 'org
   (require 'org-protocol)
   (add-to-list 'org-modules 'org-protocol)
-  (add-to-list 'org-file-apps '("\\.xlsx?\\'" . default)))
+  (unless (version< emacs-version "26.3")
+    (add-to-list 'org-file-apps '("\\.xlsx?\\'" . default))))
 
 
 ;; Set to the location of your Org files on your local system
