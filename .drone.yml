@@ -5,9 +5,9 @@ name: default
 
 steps:
   - name: build
-    image: silex/emacs:latest
+    image: silex/emacs:28.2
     commands:
-      - emacs -Q --batch -L . --eval "(setq byte-compile-error-on-warn t)" -f batch-byte-compile init.el
+      - ./test-startup.sh
  
   - name: Email Notification
     image: drillster/drone-email
