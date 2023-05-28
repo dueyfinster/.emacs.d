@@ -19,7 +19,7 @@
 (with-eval-after-load 'org
   (require 'org-protocol)
   (add-to-list 'org-modules 'org-protocol)
-  (unless (version< emacs-version "26.3")
+  (unless (version< emacs-version "27.1")
     (add-to-list 'org-file-apps '("\\.xlsx?\\'" . default))))
 
 
