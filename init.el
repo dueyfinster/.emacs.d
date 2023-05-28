@@ -29,6 +29,15 @@
 ;; Load configs for specific features and modes
 (require-package 'diminish)
 
+;; Install use-package
+(mapc
+ (lambda (package)
+   (if (not (package-installed-p package))
+       (progn
+         (package-refresh-contents)
+         (package-install package))))
+ '(use-package diminish bind-key))
+
 ;; General setup
 (require 'init-utils)
 (require 'init-gui-frames)
@@ -126,16 +135,6 @@
 ;; Write customizations to a separate file instead of this file.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
-
-;; Install use-package
-(mapc
- (lambda (package)
-   (if (not (package-installed-p package))
-       (progn
-         (package-refresh-contents)
-         (package-install package))))
- '(use-package diminish bind-key))
-
 
 ;; Install packages.
 (dolist (package '(paredit rainbow-delimiters))
