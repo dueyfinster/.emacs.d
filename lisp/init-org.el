@@ -17,8 +17,8 @@
 
 ;; Which files open with emacs? Or system default app...
 (with-eval-after-load 'org
-  (add-to-list 'org-file-apps '("\\.xls\\'" . default))
-  (add-to-list 'org-file-apps '("\\.xlsx\\'" . default)))
+  (add-to-list 'org-file-apps '("\\.xls\\'" . (lambda (file link) (default))))
+  (add-to-list 'org-file-apps '("\\.xlsx\\'" . (lambda (file link) (default)))))
 
 
 ;; Set to the location of your Org files on your local system

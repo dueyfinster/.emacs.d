@@ -35,15 +35,7 @@
 
 ;; Load configs for specific features and modes
 (require-package 'diminish)
-
-;; Install use-package
-(mapc
- (lambda (package)
-   (if (not (package-installed-p package))
-       (progn
-         (package-refresh-contents)
-         (package-install package))))
- '(use-package diminish bind-key))
+(require-package 'use-package)
 
 ;; General setup
 (require 'init-utils)
