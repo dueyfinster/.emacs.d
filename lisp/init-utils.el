@@ -11,6 +11,10 @@
   (dolist (pattern patterns)
     (add-to-list 'auto-mode-alist (cons pattern mode))))
 
+;; themes
+(defvar load-theme-hook nil)
+(defmacro after-load-theme (&rest body)
+  `(add-hook 'load-theme-hook (lambda () ,@body)))
 
 
 (provide 'init-utils)
