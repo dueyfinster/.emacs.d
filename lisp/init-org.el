@@ -148,25 +148,25 @@
   :ensure t
   :init
   (setq org-roam-v2-ack t)
-  :custom
   (setq org-roam-directory (expand-file-name "~/notes"))
   (unless (file-exists-p org-roam-directory)
     (make-directory org-roam-directory))
-  (org-roam-completion-everywhere t)
+  (setq org-roam-completion-everywhere t)
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
          :map org-mode-map
          ("C-M-i" . completion-at-point))
   :config
-  (org-roam-setup))
+  (org-roam-setup)
+  (require-package 'org-roam-ui))
 
 (setq org-roam-capture-templates '(("d" "default" plain "%?"
                                     :target (file+head "${slug}.org"
                                                        "#+title: ${title}\n")
                                     :unnarrowed t)))
 (setq org-roam-dailies-directory "journal/")
-(require-package 'org-roam-ui)
+
 
 
 ;;; Package:
