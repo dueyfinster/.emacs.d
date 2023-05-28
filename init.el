@@ -58,7 +58,7 @@
 (require 'init-common-lisp)
 (require 'init-css)
 (require 'init-csv)
-()
+(require 'init-dash)
 (require 'init-docker)
 (require 'init-elixir)
 (require 'init-erlang)
