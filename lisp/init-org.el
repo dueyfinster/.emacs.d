@@ -1,4 +1,6 @@
-;;; init-org.el -*- lexical-binding: t; -*-
+;;; init-org.el -- Org Mode -*- lexical-binding: t; -*-
+;;; Commentary:
+;;; Code:
 
 (when *is-a-mac*
   (maybe-require-package 'grab-mac-link))
@@ -10,15 +12,6 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-switchb)
-
-;; Set Preferences
-(setq org-completion-use-ido nil
-      org-startup-truncated nil
-      org-src-fontify-natively t
-      org-src-tab-acts-natively t
-      org-confirm-babel-evaluate nil
-      org-startup-with-inline-images t
-      org-edit-src-content-indentation 0)
 
 (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode %f"))
 
