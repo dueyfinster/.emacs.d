@@ -7,7 +7,7 @@ steps:
   - name: build
     image: silex/emacs:28.2-ci
     commands:
-      - apt install gcc
+      - apt install build-essential
       - ./test-startup.sh
  
   - name: Email Notification
