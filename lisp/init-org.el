@@ -149,6 +149,8 @@
       (sqlite . t)))))
 
 ;; Org Roam
+(maybe-require-package 'org-roam)
+
 (use-package org-roam
   :ensure t
   :init

@@ -54,6 +54,7 @@
 (require 'init-elixir)
 (require 'init-erlang)
 (require 'init-java)
+(require 'init-lisp)
 (require 'init-markdown)
 (require 'init-org)
 (require 'init-python)
@@ -136,42 +137,6 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
 
-;; Install packages.
-(dolist (package '(paredit rainbow-delimiters))
-  (unless (package-installed-p package)
-    (package-install package)))
-
-;; Enable Paredit.
-(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
-(add-hook 'ielm-mode-hook 'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-(add-hook 'lisp-mode-hook 'enable-paredit-mode)
-
-;; Enable Rainbow Delimiters.
-(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'ielm-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'lisp-interaction-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
-
-;; Customize Rainbow Delimiters.
-(require 'rainbow-delimiters)
-(set-face-foreground 'rainbow-delimiters-depth-1-face "#c66")  ; red
-(set-face-foreground 'rainbow-delimiters-depth-2-face "#6c6")  ; green
-(set-face-foreground 'rainbow-delimiters-depth-3-face "#69f")  ; blue
-(set-face-foreground 'rainbow-delimiters-depth-4-face "#cc6")  ; yellow
-(set-face-foreground 'rainbow-delimiters-depth-5-face "#6cc")  ; cyan
-(set-face-foreground 'rainbow-delimiters-depth-6-face "#c6c")  ; magenta
-(set-face-foreground 'rainbow-delimiters-depth-7-face "#ccc")  ; light gray
-(set-face-foreground 'rainbow-delimiters-depth-8-face "#999")  ; medium gray
-(set-face-foreground 'rainbow-delimiters-depth-9-face "#666")  ; dark gray
-
-;; Custom command.
-(defun show-current-time ()
-  "Show current time."
-  (interactive)
-  (message (current-time-string)))
-
 (require 'bind-key)
 
 ;; Custom key sequences.
@@ -201,16 +166,10 @@
   :config
   (dashboard-setup-startup-hook))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(doom-modeline yasnippet-snippets yaml-mode whole-line-or-region which-key vlf use-package unfill symbol-overlay rg rainbow-delimiters python-mode paredit page-break-lines org-roam org-cliplink ns-auto-titlebar multiple-cursors move-dup mode-line-bell markdown-mode magit-todos list-unicode-display java-snippets ibuffer-projectile highlight-escape-sequences groovy-mode grab-mac-link gnu-elpa-keyring-update git-timemachine git-modes git-link git-blamed fullframe flymake-flycheck exec-path-from-shell erlang elixir-mode eglot-java disable-mouse diminish default-text-scale dashboard consult-eglot company browse-kill-ring beacon avy)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(provide 'init)
+
+;; Local Variables:
+;; coding: utf-8
+;; no-byte-compile: t
+;; End:
+;;; init.el ends here
