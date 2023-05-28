@@ -19,7 +19,7 @@
 (with-eval-after-load 'org
   (require 'org-protocol)
   (add-to-list 'org-modules 'org-protocol)
-  (add-to-list 'org-file-apps '("\\.xlsx?\\'" . default)))
+  (add-to-list 'org-file-apps '("\\.xlsx?\\'" . (lambda (file link) (default link)))))
 
 
 ;; Set to the location of your Org files on your local system
