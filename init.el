@@ -49,6 +49,7 @@
 (require 'init-eglot)
 (require 'init-flymake)
 (require 'init-snippets)
+(require 'init-paredit)
 
 ;; Support for Filetypes & Programming Languages
 (require 'init-elixir)
