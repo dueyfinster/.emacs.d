@@ -64,20 +64,6 @@
 ;; UTF-8 mode
 (set-language-environment "UTF-8")
 
-
-;; Font Choices
-(cond
- ((find-font (font-spec :name "Fira Code"))
-  (set-frame-font "Fira Code-15"))
-
- ;; Fallback Options
-  ((find-font (font-spec :name "Consolas"))
-   (set-frame-font "Consolas-15"))
-  ((find-font (font-spec :name "Monaco"))
-   (set-frame-font "Monaco-15"))
-  ((find-font (font-spec :name "DejaVu Sans Mono"))
-   (set-frame-font "DejaVu Sans Mono-15")))
-
 ;; ido-mode
 ;;(ido-mode 1)
 ;;(ido-everywhere)
