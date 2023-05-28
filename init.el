@@ -20,9 +20,16 @@
 
 ;; Add the lisp folder to the load path
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
+
+;; Setting up
 (require 'init-benchmarking) ;; Measure startup time
-(require 'init-elpa)
+(require 'init-elpa) ;; package management
 (require 'init-exec-path) ;; Set up $PATH
+
+;; Load configs for specific features and modes
+(require-package 'diminish)
+
+;; General setup
 (require 'init-utils)
 (require 'init-gui-frames)
 (require 'init-themes)
