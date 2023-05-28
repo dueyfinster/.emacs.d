@@ -50,6 +50,7 @@
 (require 'init-flymake)
 (require 'init-snippets)
 (require 'init-paredit)
+(require 'init-recentf)
 (require 'init-ido)
 (require 'init-sessions)
 (require 'init-treesitter)
@@ -69,7 +70,9 @@
 (require 'init-lisp)
 (require 'init-markdown)
 (require 'init-org)
+(require 'init-php)
 (require 'init-python)
+(require 'init-ruby)
 (require 'init-terraform)
 (require 'init-yaml)
 
