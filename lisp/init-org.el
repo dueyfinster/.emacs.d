@@ -121,8 +121,6 @@
               ("MEETING" :foreground "forest green" :weight bold)
               ("PHONE" :foreground "forest green" :weight bold))))
 
-(use-package gnuplot)
-
 ;; Org babel
 (with-eval-after-load 'org
   (org-babel-do-load-languages

@@ -88,6 +88,18 @@
 
 (require-package 'disable-mouse)
 
+(when (maybe-require-package 'doom-modeline)
+ (doom-modeline-mode 1)
+
+  ;; https://github.com/seagle0128/doom-modeline/issues/164
+  ;; (advice-add #'select-window :after #'doom-modeline-set-selected-window)
+  ;; https://github.com/seagle0128/doom-modeline/issues/306
+  ;; (custom-set-faces `(doom-modeline-icon-inactive ((t (:inherit mode-line-inactive)))))
+  (setq doom-modeline-buffer-file-name-style 'relative-from-project)
+  (setq inhibit-compacting-font-caches t)
+  (setq doom-modeline-buffer-encoding nil)
+  (setq doom-modeline-height 20))
+
 
 (provide 'init-gui-frames)
 ;;; init-gui-frames.el ends here
