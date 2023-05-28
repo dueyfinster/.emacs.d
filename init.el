@@ -50,6 +50,9 @@
 (require 'init-flymake)
 (require 'init-snippets)
 (require 'init-paredit)
+(require 'init-ido)
+(require 'init-sessions)
+(require 'init-treesitter)
 
 ;; Support for Filetypes & Programming Languages
 (require 'init-elixir)
@@ -59,17 +62,11 @@
 (require 'init-markdown)
 (require 'init-org)
 (require 'init-python)
+(require 'init-terraform)
 (require 'init-yaml)
 
 ;; UTF-8 mode
 (set-language-environment "UTF-8")
-
-;; ido-mode
-;;(ido-mode 1)
-;;(ido-everywhere)
-;;(defvar ido-mode-flex-matching t)
-
-
 
 ;; Show stray whitespace.
 (setq-default show-trailing-whitespace t)
