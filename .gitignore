@@ -6,6 +6,9 @@ share/
 server/
 transient/
 bookmarks
+history
+.session
+.smex*
 helm-adaptive-history
 recentf
 places
