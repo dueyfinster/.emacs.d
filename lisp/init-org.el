@@ -129,20 +129,31 @@
 (use-package gnuplot)
 
 ;; Org babel
-(org-babel-do-load-languages
-'org-babel-load-languages
-'((C . t)
-  (css . t)
-  (dot . t)
-  (ditaa . t)
-  (elixir . t)
-  (emacs-lisp . t)
-  (gnuplot . t)
-  (java . t)
-  (js . t)
-  (python . t)
-  (ruby . t)
-  (shell . t)))
+(with-eval-after-load 'org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (seq-filter
+    (lambda (pair)
+      (locate-library (concat "ob-" (symbol-name (car pair)))))
+    '((applescript . t)
+      (ditaa . t)
+      (dot . t)
+      (emacs-lisp . t)
+      (gnuplot . t)
+      (haskell . nil)
+      (latex . t)
+      (ledger . t)
+      (ocaml . nil)
+      (octave . t)
+      (plantuml . t)
+      (python . t)
+      (R . t)
+      (ruby . t)
+      (screen . nil)
+      (sh . t) ;; obsolete
+      (shell . t)
+      (sql . t)
+      (sqlite . t)))))
 
 ;; Org Roam
 (use-package org-roam
@@ -174,5 +185,5 @@
 
 
 ;;; Package:
-(provide 'my-org)
-;;; my-org.el ends here
+(provide 'init-org)
+;;; init-org.el ends here

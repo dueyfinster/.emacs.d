@@ -1,29 +1,36 @@
-;;; init.el -*- lexical-binding: t; -*-
+;;; init.el --- Load the full configuration -*- lexical-binding: t -*-
+;;; Commentary:
 
-;; Customize user interface.
-(menu-bar-mode 1)
-(when (display-graphic-p)
-  (tool-bar-mode 0)
-  (scroll-bar-mode 0))
-(setq inhibit-startup-screen t)
-(column-number-mode)
+;; This file bootstraps the configuration, which is divided into
+;; a number of other files.
+
+;;; Code:
+
+;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
+;;(setq debug-on-error t)
+
+(defconst *is-a-mac* (eq system-type 'darwin))
+
+;; Adjust garbage collection thresholds during startup, and thereafter
+(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      (init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+
+;; Add the lisp folder to the load path
+(add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
+(require 'init-benchmarking) ;; Measure startup time
+(require 'init-elpa)
+(require 'init-gui-frames)
+(require 'init-themes)
+(require 'init-git)
+(require 'init-projectile)
+(require 'init-eglot)
+(require 'init-org)
 
 ;; UTF-8 mode
 (set-language-environment "UTF-8")
-
-;; Dark theme
-(defadvice load-theme (before clear-previous-themes activate)
-  "Clear existing theme settings instead of layering them"
-  (mapc #'disable-theme custom-enabled-themes))
-
-(load-theme 'wombat)
-(set-face-background 'default "#111")
-(set-face-background 'cursor "#c96")
-(set-face-background 'isearch "#c60")
-(set-face-foreground 'isearch "#eee")
-(set-face-background 'lazy-highlight "#960")
-(set-face-foreground 'lazy-highlight "#ccc")
-(set-face-foreground 'font-lock-comment-face "#fc0")
 
 
 ;; Font Choices
@@ -44,8 +51,7 @@
 ;;(ido-everywhere)
 ;;(defvar ido-mode-flex-matching t)
 
-;; Add the lisp folder to the load path
-(add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
+
 
 ;; Show stray whitespace.
 (setq-default show-trailing-whitespace t)
@@ -99,13 +105,6 @@
 ;; Write customizations to a separate file instead of this file.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
-
-;; Enable installation of packages from MELPA.
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
 
 ;; Install use-package
 (mapc
@@ -177,14 +176,6 @@
 (use-package icomplete
   :hook (after-init . fido-mode))
 
-;; magit
-(use-package magit
-    :defer 5
-    :ensure t
-    :init (progn
-           (bind-key "C-x g" 'magit-status)
-           ))
-
 
 ;; Helm
 (use-package helm
@@ -194,21 +185,6 @@
   (setq helm-recentf-fuzzy-match t))
 
 (use-package helm-rg)
-
-;; Projectile
-(use-package projectile
-  :ensure t
-  :diminish projectile-mode
-  :bind ("C-c p" . projectile-command-map)
-  :config
-  (setq projectile-indexing-method 'alien)
-  (setq projectile-sort-order 'recently-active)
-  (setq projectile-completion-system 'helm)
-  (setq projectile-per-project-compilation-buffer t)
-  (setq projectile-comint-mode t)
-  (setq compilation-read-command nil)
-  (helm-projectile-on)
-  (projectile-mode))
 
 (use-package helm-projectile)
 
