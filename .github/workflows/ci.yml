@@ -5,31 +5,43 @@ on:
   push:
     branches:
       - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  test:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        emacs_version:
-          - 26.1
-          - 26.2
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        emacs-version:
           - 26.3
-          - 27.1
           - 27.2
-          - 28.1
-          - snapshot
+          - 28.2
+        experimental: [false]
         include:
-          - os: [macos-latest, windows-latest]
-            emacs_version: 28.1
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Setup Emacs
-        uses: jcs090218/setup-emacs@master
-        with:
-          version: ${{ matrix.emacs-version }}
+          - os: ubuntu-latest
+            emacs-version: snapshot
+            experimental: true
+          - os: macos-latest
+            emacs-version: snapshot
+            experimental: true
+          - os: windows-latest
+            emacs-version: snapshot
+            experimental: true
 
-      - uses: actions/checkout@v2
-      - name: Check startup
-        run: ./test-startup.sh
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: jcs090218/setup-emacs@master
+      with:
+        version: ${{ matrix.emacs-version }}
+
+    - name: Test Startup
+      run: ./test-startup.sh
