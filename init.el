@@ -55,8 +55,11 @@
 (require 'init-treesitter)
 
 ;; Support for Filetypes & Programming Languages
+(require 'init-css)
+(require 'init-csv)
 (require 'init-elixir)
 (require 'init-erlang)
+(require 'init-html)
 (require 'init-java)
 (require 'init-lisp)
 (require 'init-markdown)
