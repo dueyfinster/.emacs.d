@@ -158,7 +158,9 @@
          :map org-mode-map
          ("C-M-i" . completion-at-point))
   :config
-  (org-roam-setup)
+  (org-roam-setup))
+
+(unless (version< emacs-version "27.1")
   (require-package 'org-roam-ui))
 
 (setq org-roam-capture-templates '(("d" "default" plain "%?"
