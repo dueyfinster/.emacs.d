@@ -19,8 +19,10 @@
 (with-eval-after-load 'org
   (require 'org-protocol)
   (add-to-list 'org-modules 'org-protocol)
-  (unless (version< emacs-version "27.2")
-    (add-to-list 'org-file-apps '("\\.xlsx?\\'" . default))))
+  
+  (unless (version< emacs-version "27.1")
+  (add-to-list 'org-file-apps '("\\.xlsx?\\'" . default)))
+  )
 
 
 ;; Set to the location of your Org files on your local system
