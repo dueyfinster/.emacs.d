@@ -9,6 +9,13 @@
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
 ;;(setq debug-on-error t)
 
+(let ((minver "26.1"))
+  (when (version< emacs-version minver)
+    (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
+(when (version< emacs-version "27.1")
+  (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
+
+
 (defconst *is-a-mac* (eq system-type 'darwin))
 
 ;; Adjust garbage collection thresholds during startup, and thereafter
@@ -40,11 +47,11 @@
 
 ;; General setup
 (require 'init-utils)
+(require 'init-editing-utils)
 (require 'init-gui-frames)
 (require 'init-themes)
 (require 'init-company)
 (require 'init-git)
-(require 'init-locales)
 (require 'init-projectile)
 (require 'init-grep)
 (require 'init-eglot)
@@ -71,6 +78,23 @@
 (require 'init-python)
 (require 'init-terraform)
 (require 'init-yaml)
+
+
+;; Extra packages which don't require any configuration
+(require-package 'sudo-edit)
+(require-package 'gnuplot)
+(require-package 'lua-mode)
+(require-package 'htmlize)
+(when *is-a-mac*
+  (require-package 'osx-location))
+(when (maybe-require-package 'uptimes)
+  (setq-default uptimes-keep-count 200)
+  (add-hook 'after-init-hook (lambda () (require 'uptimes))))
+
+(when (fboundp 'global-eldoc-mode)
+  (add-hook 'after-init-hook 'global-eldoc-mode))
+
+
 
 ;; Show stray whitespace.
 (setq-default show-trailing-whitespace t)
@@ -137,16 +161,20 @@
 (global-set-key [(C-tab)] 'other-window)
 (global-set-key [(C-M-tab)] 'other-window)
 
-(require 'server)
-;; Start a server if (server-running-p) does not return t (e.g. if it
-;; returns nil or :other)
-(or (eq (server-running-p) t)
-    (server-start))
 
-;; which-key
-(use-package which-key
-  :diminish which-key-mode
-  :config (which-key-mode 1))
+;;; Allow access from emacsclient
+(add-hook 'after-init-hook
+          (lambda ()
+            (require 'server)
+            (unless (server-running-p)
+              (server-start))))
+
+;; Variables configured via the interactive 'customize' interface
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+;; Locales (setting them earlier in this file doesn't work in X)
+(require 'init-locales)
 
 ;; Dashboard
 (use-package dashboard
