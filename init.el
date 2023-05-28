@@ -63,6 +63,7 @@
 (require 'init-erlang)
 (require 'init-html)
 (require 'init-java)
+(require 'init-ledger)
 (require 'init-lisp)
 (require 'init-markdown)
 (require 'init-org)
