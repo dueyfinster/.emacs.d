@@ -92,6 +92,8 @@
 (when (fboundp 'global-eldoc-mode)
   (add-hook 'after-init-hook 'global-eldoc-mode))
 
+(when *is-a-mac*
+  (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#"))))
 
 
 ;; Show stray whitespace.
