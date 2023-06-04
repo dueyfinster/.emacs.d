@@ -129,6 +129,7 @@
       (haskell . nil)
       (latex . t)
       (ledger . t)
+      (lua . t)
       (ocaml . nil)
       (octave . t)
       (plantuml . t)
