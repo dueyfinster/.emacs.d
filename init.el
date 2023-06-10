@@ -73,6 +73,7 @@
 (require 'init-org)
 (require 'init-php)
 (require 'init-python)
+(require 'init-racket)
 (require 'init-ruby)
 (require 'init-terraform)
 (require 'init-yaml)
