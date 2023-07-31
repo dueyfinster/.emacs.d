@@ -5,7 +5,7 @@ name: default
 
 steps:
   - name: build
-    image: silex/emacs:28.2-ci
+    image: silex/emacs:29.1-ci
     commands:
       - apt-get update && apt-get -qq install build-essential
       - ./test-startup.sh
