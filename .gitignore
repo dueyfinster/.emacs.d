@@ -13,6 +13,7 @@ helm-adaptive-history
 recentf
 places
 projects
+.*.el
 custom.el
 ido.last
 *.elc
