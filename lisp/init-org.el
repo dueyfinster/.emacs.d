@@ -122,6 +122,7 @@
     (lambda (pair)
       (locate-library (concat "ob-" (symbol-name (car pair)))))
     '((applescript . t)
+      (C . t)
       (ditaa . t)
       (dot . t)
       (emacs-lisp . t)
