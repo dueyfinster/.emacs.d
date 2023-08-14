@@ -142,6 +142,11 @@
       (shell . t)
       (sql . t)
       (sqlite . t)))))
+      
+
+;; Path to executables for org-babel
+(setq org-ditaa-jar-path "~/repos/notes-hugo/bin/ditaa.jar")
+(setq org-plantuml-jar-path "~/repos/notes-hugo/bin/plantuml.jar")
 
 ;; Org Roam
 (maybe-require-package 'org-roam)
