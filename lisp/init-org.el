@@ -143,7 +143,6 @@
       (shell . t)
       (sql . t)
       (sqlite . t)))))
-      
 
 ;; Path to executables for org-babel
 (setq org-ditaa-jar-path "~/repos/notes-hugo/bin/ditaa.jar")
