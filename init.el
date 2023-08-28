@@ -36,7 +36,7 @@
 ;; Load configs for specific features and modes
 (require-package 'diminish)
 (require-package 'use-package)
-(require-package 'org "9.0")
+(require-package 'org "9.6")
 
 ;; General setup
 (require 'init-utils)
