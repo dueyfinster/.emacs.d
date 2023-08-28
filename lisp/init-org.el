@@ -1,9 +1,6 @@
 ;;; init-org.el -- Org Mode -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
-
-(maybe-require-package 'org)
-
 (when *is-a-mac*
   (maybe-require-package 'grab-mac-link))
 
