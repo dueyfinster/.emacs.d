@@ -8,10 +8,10 @@
 (maybe-require-package 'org-cliplink)
 
 ;; Set Keybindings
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-switchb)
+(global-set-key (kbd "\C-cl") 'org-store-link)
+(global-set-key (kbd "\C-ca") 'org-agenda)
+(global-set-key (kbd "\C-cc") 'org-capture)
+(global-set-key (kbd "\C-cb") 'org-switchb)
 
 (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f" "xelatex -interaction nonstopmode %f"))
 
@@ -166,7 +166,7 @@
          :map org-mode-map
          ("C-M-i" . completion-at-point))
   :config
-  (org-roam-setup))
+  (org-roam-db-autosync-enable))
 
 (unless (version< emacs-version "27.1")
   (require-package 'org-roam-ui))
