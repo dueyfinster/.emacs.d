@@ -24,9 +24,10 @@
 ;; Set to the location of your Org files on your local system
 ;; use iCloud client on Windows
 (if (eq system-type 'windows-nt)
-  (setq org-directory (expand-file-name "C:/Users/egronei/iCloudDrive/iCloud~com~appsonthemove~beorg/org/"))
+    (setq org-directory (expand-file-name "C:/Users/egronei/iCloudDrive/iCloud~com~appsonthemove~beorg/org/"))
   (setq org-directory (expand-file-name "~/org/")))
 
+(global-visual-line-mode t)
 
 (setq org-default-notes-file (concat org-directory "notes.org"))
 (setq org-inbox-path (concat org-directory "inbox.org"))
