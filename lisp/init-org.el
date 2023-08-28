@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(maybe-require-package 'org)
+
 (when *is-a-mac*
   (maybe-require-package 'grab-mac-link))
 
