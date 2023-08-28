@@ -159,14 +159,16 @@
   (unless (file-exists-p org-roam-directory)
     (make-directory org-roam-directory))
   (setq org-roam-completion-everywhere t)
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         :map org-mode-map
-         ("C-M-i" . completion-at-point))
   :config
   (org-roam-db-autosync-enable))
+
+;; Set org-roam Keybindings
+(global-set-key (kbd "\C-cnl") 'org-roam-buffer-toggle)
+(global-set-key (kbd "\C-cnf") 'org-roam-node-find)
+(global-set-key (kbd "\C-cni") 'org-roam-node-insert)
+(global-set-key (kbd "\C-cnc") 'org-roam-capture)
+
+
 
 (unless (version< emacs-version "27.1")
   (require-package 'org-roam-ui))
