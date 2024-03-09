@@ -31,12 +31,14 @@
 (setq org-default-notes-file (concat org-directory "notes.org"))
 (setq org-inbox-path (concat org-directory "inbox.org"))
 (setq org-gtd-path (concat org-directory "gtd.org"))
+(setq org-work-path (concat org-directory "work.org"))
 (setq org-tickler-path (concat org-directory "tickler.org"))
 (setq org-someday-path (concat org-directory "someday.org"))
 
 ;; Org Agenda
 (setq org-agenda-files (list org-directory))
 (setq org-refile-targets '((org-gtd-path :maxlevel . 1)
+                           (org-work-path :maxlevel . 2)
                            (org-tickler-path :level . 2)
                            (org-someday-path :maxlevel . 2)))
 
