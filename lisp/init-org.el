@@ -6,6 +6,11 @@
 
 (maybe-require-package 'org-cliplink)
 
+(setq
+ org-default-notes-file "~/org/gtd.org"
+ initial-buffer-choice  org-default-notes-file)
+
+
 ;; Set Keybindings
 (global-set-key (kbd "\C-cl") 'org-store-link)
 (global-set-key (kbd "\C-ca") 'org-agenda)
@@ -78,25 +83,25 @@
 
 ;; Org Capture
 (setq org-capture-templates `(
-  ("p" "Personal Task" entry (file+headline ,(concat org-directory "gtd.org") "Personal")
-               "* TODO %i%?")
-  ("w" "Work Task" entry (file+headline ,(concat org-directory "gtd.org") "Work")
-               "* TODO %i%?")
-  ("t" "Todo [inbox]" entry (file+headline ,(concat org-directory "inbox.org") ,(format "%s %s" (format-time-string "%Y")(format-time-string "%B")))
-"* TODO %i%?\n %U")
-  ("m" "Meeting" entry (file+headline ,(concat org-directory "gtd.org") "Work")
-               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-  ("P" "Phone call" entry (file ,(concat org-directory "gtd.org") "Work")
-               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-  ("T" "Tickler" entry (file+headline ,(concat org-directory "tickler.org")
-               "Tickler") "* %i%? \n %U")
+                              ("p" "Personal Task" entry (file+headline ,(concat org-directory "gtd.org") "Personal")
+                               "* TODO %i%?")
+                              ("w" "Work Task" entry (file+headline ,(concat org-directory "work.org") "Work")
+                               "* TODO %i%?")
+                              ("t" "Todo [inbox]" entry (file+headline ,(concat org-directory "inbox.org") ,(format "%s %s" (format-time-string "%Y")(format-time-string "%B")))
+                               "* TODO %i%?\n %U")
+                              ("m" "Meeting" entry (file+headline ,(concat org-directory "work.org") "Work")
+                               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+                              ("P" "Phone call" entry (file ,(concat org-directory "work.org") "Work")
+                               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+                              ("T" "Tickler" entry (file+headline ,(concat org-directory "tickler.org")
+                                                                  "Tickler") "* %i%? \n %U")
 
-  ;; Org-Protocol entries
-	("p" "Protocol" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
-        "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-	("L" "Protocol Link" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
-        "* %? [[%:link][%:description]] \nCaptured On: %U")
-    ))
+                              ;; Org-Protocol entries
+	                          ("p" "Protocol" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
+                               "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+	                          ("L" "Protocol Link" entry (file+headline ,(concat org-directory "inbox.org") "Tasks")
+                               "* %? [[%:link][%:description]] \nCaptured On: %U")
+                              ))
 
 ;; Org task states
 (setq org-todo-keywords
