@@ -178,12 +178,6 @@
 ;; Locales (setting them earlier in this file doesn't work in X)
 (require 'init-locales)
 
-;; Dashboard
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook))
-
 (provide 'init)
 
 ;; Local Variables:
